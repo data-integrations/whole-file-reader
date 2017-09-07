@@ -22,7 +22,6 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
@@ -33,8 +32,9 @@ import java.io.IOException;
 /**
  * A {@link RecordReader} that reads the full file content.
  */
-final class WholeFileRecordReader extends RecordReader<NullWritable, BytesWritable> {
+final class WholeFileRecordReader extends RecordReader<String, BytesWritable> {
 
+  private String filePath;
   private BytesWritable value;
   private FileSplit inputSplit;
   private Configuration hConf;
@@ -61,7 +61,7 @@ final class WholeFileRecordReader extends RecordReader<NullWritable, BytesWritab
 
     Path path = inputSplit.getPath();
     FileSystem fs = path.getFileSystem(hConf);
-
+    filePath = path.toUri().getPath();
     try (FSDataInputStream input = fs.open(path)) {
       byte[] content = new byte[(int) inputSplit.getLength()];
       ByteStreams.readFully(input, content);
@@ -71,8 +71,8 @@ final class WholeFileRecordReader extends RecordReader<NullWritable, BytesWritab
   }
 
   @Override
-  public NullWritable getCurrentKey() throws IOException, InterruptedException {
-    return NullWritable.get();
+  public String getCurrentKey() throws IOException, InterruptedException {
+    return filePath;
   }
 
   @Override
