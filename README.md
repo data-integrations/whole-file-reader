@@ -1,7 +1,9 @@
-[![Build Status](https://travis-ci.org/hydrator/whole-file-reader.svg?branch=develop)](https://travis-ci.org/hydrator/whole-file-reader) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-<img  alt="Cask Market Availability" src="https://cdap-users.herokuapp.com/assets/cm-notavailable.svg"/>
-
 # Whole File Source
+
+[![cm-available](https://cdap-users.herokuapp.com/assets/cm-available.svg)](https://docs.cask.co/cdap/current/en/integrations/cask-market.html)
+![cdap-batch-source](https://cdap-users.herokuapp.com/assets/cdap-batch-source.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Join CDAP community](https://cdap-users.herokuapp.com/badge.svg?t=wrangler)](https://cdap-users.herokuapp.com?t=1)
 
 Whole file source reads the entire file. It's highly recommended not
 to use this plugin when the files are very large and splittable.

@@ -20,21 +20,20 @@
 
   <groupId>co.cask</groupId>
   <artifactId>whole-file-source</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.1.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Whole file source</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spark.version>1.6.1</spark.version>
-    <cdap.version>4.1.0</cdap.version>
+    <cdap.version>5.1.2</cdap.version>
     <unix4j.version>0.4</unix4j.version>
     <hadoop.version>2.3.0</hadoop.version>
-    <hydrator.version>1.6.0</hydrator.version>
+    <hydrator.version>2.2.0-SNAPSHOT</hydrator.version>
     <widgets.dir>widgets</widgets.dir>
     <docs.dir>docs</docs.dir>
-    <app.parents>system:cdap-data-pipeline[4.0.0,5.0.0),system:cdap-data-streams[4.0.0,5.0.0)</app.parents>
+    <app.parents>system:cdap-data-pipeline[5.0.0,6.0.0),system:cdap-data-streams[5.0.0,6.0.0)</app.parents>
     <main.basedir>${project.basedir}</main.basedir>
   </properties>
 
@@ -53,12 +52,6 @@
     <dependency>
       <groupId>co.cask.cdap</groupId>
       <artifactId>cdap-etl-api</artifactId>
-      <version>${cdap.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>co.cask.cdap</groupId>
-      <artifactId>cdap-etl-api-spark</artifactId>
       <version>${cdap.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -93,46 +86,6 @@
       <artifactId>hydrator-test</artifactId>
       <version>${cdap.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
-      <version>${spark.version}</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.esotericsoftware.reflectasm</groupId>
-          <artifactId>reflectasm</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.curator</groupId>
-          <artifactId>curator-recipes</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.tachyonproject</groupId>
-          <artifactId>tachyon-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.scala-lang</groupId>
-          <artifactId>scala-compiler</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.eclipse.jetty.orbit</groupId>
-          <artifactId>javax.servlet</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
@@ -285,7 +238,7 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.3.7</version>
+        <version>3.5.0</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>

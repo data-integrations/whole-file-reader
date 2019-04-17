@@ -29,7 +29,7 @@ import java.io.IOException;
 /**
  * An input format that reads the whole file content as one record.
  */
-public class WholeFileInputFormat extends FileInputFormat<NullWritable, BytesWritable> {
+public class WholeFileInputFormat extends FileInputFormat<String, BytesWritable> {
 
   @Override
   protected boolean isSplitable(JobContext context, Path filename) {

@@ -52,7 +52,7 @@ import java.util.Map;
 @Plugin(type = BatchSource.PLUGIN_TYPE)
 @Name("WholeFileReader")
 @Description("Reads content of the whole file as one record")
-public class WholeFileSource extends BatchSource<NullWritable, BytesWritable, StructuredRecord> {
+public class WholeFileSource extends BatchSource<String, BytesWritable, StructuredRecord> {
 
   private static final Logger LOG = LoggerFactory.getLogger(WholeFileSource.class);
 
@@ -90,13 +90,16 @@ public class WholeFileSource extends BatchSource<NullWritable, BytesWritable, St
   }
 
   @Override
-  public void transform(KeyValue<NullWritable, BytesWritable> input,
+  public void transform(KeyValue<String, BytesWritable> input,
                         Emitter<StructuredRecord> emitter) throws Exception {
-    emitter.emit(StructuredRecord.builder(outputSchema).set("body", input.getValue().getBytes()).build());
+    emitter.emit(StructuredRecord.builder(outputSchema)
+                   .set("filePath", input.getKey())
+                   .set("body", input.getValue().getBytes()).build());
   }
 
   private Schema createOutputSchema() {
-    return Schema.recordOf("output", Schema.Field.of("body", Schema.of(Schema.Type.BYTES)));
+    return Schema.recordOf("output", Schema.Field.of("filePath", Schema.of(Schema.Type.STRING)),
+                           Schema.Field.of("body", Schema.of(Schema.Type.BYTES)));
   }
 
   private static Job createJob() throws IOException {

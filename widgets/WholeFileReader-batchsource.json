@@ -26,6 +26,7 @@
     {
       "widget-type": "non-editable-schema-editor",
       "schema": {
+        "filePath" : "string",
         "body": "bytes"
       }
     }
