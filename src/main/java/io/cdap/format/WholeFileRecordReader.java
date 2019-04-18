@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.format;
+package io.cdap.format;
 
 import com.google.common.io.ByteStreams;
 import org.apache.hadoop.conf.Configuration;

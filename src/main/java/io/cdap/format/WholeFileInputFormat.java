@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.format;
+package io.cdap.format;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
