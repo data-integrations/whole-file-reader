@@ -17,7 +17,6 @@
 package io.cdap;
 
 import io.cdap.cdap.api.annotation.Description;
-import io.cdap.cdap.api.annotation.Macro;
 import io.cdap.cdap.api.annotation.Name;
 import io.cdap.cdap.api.annotation.Plugin;
 import io.cdap.cdap.api.data.batch.Input;
@@ -25,14 +24,13 @@ import io.cdap.cdap.api.data.batch.InputFormatProvider;
 import io.cdap.cdap.api.data.format.StructuredRecord;
 import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.cdap.api.dataset.lib.KeyValue;
-import io.cdap.cdap.api.plugin.PluginConfig;
 import io.cdap.cdap.etl.api.Emitter;
+import io.cdap.cdap.etl.api.FailureCollector;
 import io.cdap.cdap.etl.api.PipelineConfigurer;
 import io.cdap.cdap.etl.api.batch.BatchSource;
 import io.cdap.cdap.etl.api.batch.BatchSourceContext;
 import io.cdap.format.WholeFileInputFormat;
 import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.security.Credentials;
@@ -56,27 +54,33 @@ public class WholeFileSource extends BatchSource<String, BytesWritable, Structur
 
   private static final Logger LOG = LoggerFactory.getLogger(WholeFileSource.class);
 
-  private final Config config;
+  private final WholeFileSourceConfig config;
   private final Schema outputSchema;
 
-  public WholeFileSource(Config config) {
+  public WholeFileSource(WholeFileSourceConfig config) {
     this.config = config;
     this.outputSchema = createOutputSchema();
   }
 
   @Override
   public void configurePipeline(PipelineConfigurer configurer) {
+    FailureCollector failureCollector = configurer.getStageConfigurer().getFailureCollector();
+    config.validate(failureCollector);
+    failureCollector.getOrThrowException();
     configurer.getStageConfigurer().setOutputSchema(outputSchema);
   }
 
   @Override
   public void prepareRun(BatchSourceContext context) throws Exception {
+    FailureCollector failureCollector = context.getFailureCollector();
+    config.validate(failureCollector);
+    failureCollector.getOrThrowException();
     Job job = createJob();
 
-    FileInputFormat.setInputPaths(job, config.path);
+    FileInputFormat.setInputPaths(job, config.getPath());
     final String inputDir = job.getConfiguration().get(FileInputFormat.INPUT_DIR);
 
-    context.setInput(Input.of(config.referenceName, new InputFormatProvider() {
+    context.setInput(Input.of(config.getReferenceName(), new InputFormatProvider() {
       @Override
       public String getInputFormatClassName() {
         return WholeFileInputFormat.class.getName();
@@ -123,32 +127,4 @@ public class WholeFileSource extends BatchSource<String, BytesWritable, Structur
     }
   }
 
-  /**
-   * Configurations for the {@link WholeFileSource} plugin.
-   */
-  public static final class Config extends PluginConfig {
-
-    @Description(
-      "This will be used to uniquely identify this source/sink for lineage, annotating metadata, etc."
-    )
-    private String referenceName;
-
-    @Description(
-      "Path to file(s) to be read. If a directory is specified, " +
-        "terminate the path name with a \'/\'. For distributed file system such as HDFS, file system name should come" +
-        " from 'fs.DefaultFS' property in the 'core-site.xml'. For example, 'hdfs://mycluster.net:8020/input', where" +
-        " value of the property 'fs.DefaultFS' in the 'core-site.xml' is 'hdfs://mycluster.net:8020'. The path uses " +
-        "filename expansion (globbing) to read files."
-    )
-    @Macro
-    private String path;
-
-    @Override
-    public String toString() {
-      return "WholeFileSourceConfig{" +
-        "referenceName='" + referenceName + '\'' +
-        ", path='" + path + '\'' +
-        '}';
-    }
-  }
 }
