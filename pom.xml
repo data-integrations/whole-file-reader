@@ -29,7 +29,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <cdap.version>5.1.2</cdap.version>
     <unix4j.version>0.4</unix4j.version>
-    <hadoop.version>2.3.0</hadoop.version>
+    <hadoop.version>2.10.1</hadoop.version>
     <hydrator.version>2.2.0-SNAPSHOT</hydrator.version>
     <widgets.dir>widgets</widgets.dir>
     <docs.dir>docs</docs.dir>
